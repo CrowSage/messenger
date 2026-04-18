@@ -24,4 +24,5 @@ urlpatterns = [
     path("api/token/", TokenObtainPairView.as_view(), name="token-obtain-pair"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token-refresh"),
     path("users/", include("users.urls")),
+    path("chat/", include("chat.urls")),
 ]

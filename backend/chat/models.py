@@ -18,10 +18,12 @@ class Conversation(models.Model):
 
 class ConversationParticipant(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE)
+    conversation = models.ForeignKey(
+        Conversation, on_delete=models.CASCADE, related_name="participants"
+    )
     is_admin = models.BooleanField(default=False)
     joined_at = models.DateTimeField(auto_now_add=True)
-    left_at = models.DateTimeField(null=True)
+    left_at = models.DateTimeField(null=True, blank=True, default=None)
 
 
 class Message(models.Model):
@@ -39,7 +41,9 @@ class Message(models.Model):
         related_name="sent_messages",
     )
     created_at = models.DateTimeField(auto_now_add=True)
-    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE)
+    conversation = models.ForeignKey(
+        Conversation, on_delete=models.CASCADE, related_name="conversation"
+    )
     read_by = models.ManyToManyField(
         settings.AUTH_USER_MODEL, related_name="read_messages"
     )
