@@ -14,6 +14,7 @@ from .serializers import (
 User = get_user_model()
 
 
+# For Getting Chats
 # Routed: /chat/
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
@@ -29,6 +30,7 @@ def get_chats(request):
     return Response({"chats": serializer.data})
 
 
+# For Getting Message of a chat
 # Routed: /chat/<chat_id>
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
@@ -50,6 +52,7 @@ def get_messages(request, chat_id):
     return Response(serializer.data)
 
 
+# For Creating new chats
 # Routed: /chat/new/
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
@@ -68,8 +71,8 @@ def create_conversation(request):
         other_user = User.objects.get(id=other_user)
 
         chat_already_exist = Conversation.objects.filter(
-            conversation_type="direct", participant__user=request.user
-        ).filter(participant__user=other_user)
+            conversation_type="direct", participants__user=request.user
+        ).filter(participants__user=other_user)
 
         if chat_already_exist:
             return Response({"error": "Chat already exists!"})
