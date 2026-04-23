@@ -3,6 +3,7 @@ import Home from "./pages/Home"
 import Register from "./pages/Register"
 import Login from "./pages/Login"
 import Chat from "./pages/Chat"
+import { AuthProvider } from "./context/AuthContext"
 
 export default function App() {
 
@@ -14,7 +15,11 @@ export default function App() {
         { path: "/chat", element: <Chat /> },
         { path: "/chat/:chatId", element: <Chat /> },
     ])
+
     return (
-        <RouterProvider router={router} />
+        <AuthProvider>
+            <RouterProvider router={router} />
+        </AuthProvider>
+
     )
 }
