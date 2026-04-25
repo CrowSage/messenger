@@ -83,7 +83,7 @@ export function AuthProvider({ children }) {
 
 
             // Getting User Object
-            getUser(data.access)
+            await getUser(data.access)
 
             return true
         }

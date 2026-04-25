@@ -46,7 +46,7 @@ def get_messages(request, chat_id):
 
     # Getting and Returning Messages
 
-    messages = Message.objects.filter(coversation_id=chat_id)
+    messages = Message.objects.filter(conversation_id=chat_id)
     serializer = MessageSerializer(messages, many=True)
 
     return Response(serializer.data)
@@ -75,13 +75,13 @@ def create_conversation(request):
         ).filter(participants__user=other_user)
 
         if chat_already_exist:
-            return Response({"error": "Chat already exists!"})
+            return Response({"id": chat_already_exist.first().id})
 
         chat = Conversation.objects.create(name=name, conversation_type="direct")
         ConversationParticipant.objects.create(conversation=chat, user=user)
         ConversationParticipant.objects.create(conversation=chat, user=other_user)
 
-        return Response({"message": "Chat created sucessfully"})
+        return Response({"id": chat.id, "message": "Chat created sucessfully"})
 
     elif conversation_type == "group":
         name = request.data.get("name", "New-Group")
@@ -109,7 +109,7 @@ def create_conversation(request):
                 curr.is_admin = True
                 curr.save()
 
-        return Response({"message": "Chat created sucessfully"})
+        return Response({"id": chat.id, "message": "Chat created sucessfully"})
 
     return Response(
         {"error": "provide with type:'direct' or 'group' when creating chat"}

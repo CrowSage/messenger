@@ -3,9 +3,8 @@ import { useAuth } from "../context/AuthContext"
 import { useApiClient } from "../hooks/useApiClient"
 import { useNavigate } from "react-router-dom"
 
-export default function Sidebar() {
+export default function Sidebar({ chats }) {
     // States and Variables
-    const [chats, setChats] = useState([])
     const [searchInput, setSearchInput] = useState("")
     const [searchResult, setSearchResult] = useState([])
 
@@ -15,19 +14,6 @@ export default function Sidebar() {
     const navigate = useNavigate()
 
     // UseEffects
-
-
-    // - Fetching Chats
-    useEffect(() => {
-
-        async function fetchChats() {
-            const data = await apiClient("api/chat/", { method: "GET" })
-            setChats(data.chats)
-        }
-
-        fetchChats()
-
-    }, [])
 
     // - Login Checker
     useEffect(() => {
@@ -85,7 +71,9 @@ export default function Sidebar() {
             </form>
             {chats && chats.map((chat) => (
                 <div key={chat.id} onClick={() => { navigate(`/chat/${chat.id}`) }}>
-                    {chat.name}
+
+                    {/* Naming Logic */}
+                    {chat.conversation_type === "direct" ? <span>{chat.participants.find((p) => p.user !== user.id)?.username}</span> : <span>{chat.name}</span>}
                 </div>
             ))}
             {searchInput && <h1>Search Result</h1>}

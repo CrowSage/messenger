@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 
 # For Creating an account
-# Routed: /users/register/
+# Routed: /api/users/register/
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def register(request):
@@ -17,11 +17,11 @@ def register(request):
         serializer.save()
         return Response({"message": "User Created Successfully"}, status=201)
     else:
-        return Response(serializer.errors)
+        return Response(serializer.errors, status=400)
 
 
 # For Searching Users
-# Routed: /users/search/
+# Routed: /api/users/search/
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def search_users(request):
@@ -33,4 +33,15 @@ def search_users(request):
         users = User.objects.none()
 
     serializer = UserSerializer(users, many=True)
+    return Response(serializer.data)
+
+
+# For User to get account details
+# Routed: /api/users/me/
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def me(request):
+
+    user = request.user
+    serializer = UserSerializer(user)
     return Response(serializer.data)

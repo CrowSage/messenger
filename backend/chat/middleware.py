@@ -3,6 +3,7 @@ from rest_framework_simplejwt.tokens import AccessToken
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.auth import get_user_model
 from channels.db import database_sync_to_async
+from rest_framework_simplejwt.exceptions import ExpiredTokenError, InvalidToken
 
 User = get_user_model()
 
@@ -18,7 +19,7 @@ class JWTAuthMiddleware(BaseMiddleware):
 
             user = await database_sync_to_async(User.objects.get)(id=user_id)
             scope["user"] = user
-        except User.DoesNotExist:
+        except (User.DoesNotExist, ExpiredTokenError, InvalidToken, Exception):
             scope["user"] = AnonymousUser()
 
         return await super().__call__(scope, receive, send)
