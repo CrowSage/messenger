@@ -27,10 +27,10 @@ export default function Register() {
 
         // Validation
         if (username.length < 3) {
-            setError("Username must be atleast 3 letters.")
+            setError("Username must be atleast 3 Characters.")
             return
         } else if (password.length < 8) {
-            setError("Password must be atleast 8 letters.")
+            setError("Password must be atleast 8 Characters.")
             return
         } else if (password !== confirmPassword) {
             setError("Password and Confirm Password doesn't match.")

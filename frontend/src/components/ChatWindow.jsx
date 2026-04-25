@@ -2,6 +2,6 @@ export default function ChatWindow({ chatId }) {
 
 
     return (
-        <h1>ChatWindow</h1>
+        <h1>Messages on Chat {chatId}</h1>
     )
 }
