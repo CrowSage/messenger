@@ -18,10 +18,6 @@ export default function Chat() {
     // UseEffects
     useEffect(() => {
 
-        async function fetchChats() {
-            const data = await apiClient("api/chat/", { method: "GET" })
-            setAllChats(data.chats)
-        }
 
         fetchChats()
 
@@ -29,11 +25,15 @@ export default function Chat() {
 
 
     // Functions
+    async function fetchChats() {
+        const data = await apiClient("api/chat/", { method: "GET" })
+        setAllChats(data.chats)
+    }
 
     // Returning
     return (
         <div className="mainChat">
-            <Sidebar chats={allChats} />
+            <Sidebar chats={allChats} fetchChats={fetchChats} />
             {chatId && <ChatWindow chatId={chatId} activeChat={activeChat} />}
         </div>
     )

@@ -15,14 +15,14 @@ export default function ChatWindow({ chatId, activeChat }) {
 
     // Others
     const apiClient = useApiClient()
-    const { user, token } = useAuth()
+    const { user, token, refreshAccessToken } = useAuth()
     console.log(activeChat)
 
     // UseEffects
     useEffect(() => {
 
         async function fetchChat(id) {
-            const data = await apiClient(`api/chat/${id}`, { "method": "GET" })
+            const data = await apiClient(`api/chat/${id}/`, { "method": "GET" })
             if (data) {
                 setMessages(data)
                 console.log(data)
@@ -35,20 +35,26 @@ export default function ChatWindow({ chatId, activeChat }) {
 
 
     useEffect(() => {
-        const socket = new WebSocket(`${WEBSOCKET_API_URL}/ws/chat/${chatId}/?token=${token}`)
-        socketRef.current = socket
 
-        socket.onmessage = (event) => {
-            const data = JSON.parse(event.data)
-            setMessages(prev => [...prev, data])
+        async function initSocket() {
+
+            await refreshAccessToken()
+            const freshToken = localStorage.getItem("accessToken")
+            const socket = new WebSocket(`${WEBSOCKET_API_URL}/ws/chat/${chatId}/?token=${freshToken}`)
+            socketRef.current = socket
+
+            socket.onmessage = (event) => {
+                const data = JSON.parse(event.data)
+                setMessages(prev => [...prev, data])
+            }
+
+            socket.onclose = () => {
+
+            }
+
         }
-
-        socket.onclose = () => {
-
-        }
-
-        return () => socket.close()
-
+        initSocket()
+        return () => socketRef.current?.close()
     }, [chatId])
 
 
@@ -67,8 +73,8 @@ export default function ChatWindow({ chatId, activeChat }) {
     return (
         <>
             <h4>{activeChat.conversation_type === "direct" ? <span>{activeChat.participants.find((p) => p.user !== user.id)?.username}</span> : <span>{activeChat.name}</span>}</h4>
-            {messages.map((message) => (
-                <Message content={message.content} date_created={message.date_created} sender={message.sender} messageId={message.id} key={message.id} />
+            {messages.map((message, index) => (
+                <Message content={message.content} created_at={message.created_at} sender={message.sender} key={message.id || index} />
             ))}
 
             <form onSubmit={(e) => { e.preventDefault(); sendMessage() }}>

@@ -1,9 +1,10 @@
-export default function Message({ content, date_created, sender, messageId }) {
+export default function Message({ content, created_at, sender }) {
 
+    const formattedDate = new Date(created_at).toLocaleString()
 
     return (
         <span className="message" >
-            {sender}, {date_created}
+            {sender}, {formattedDate}
             <strong>{content}</strong>
         </span>
     )

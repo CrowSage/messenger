@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthContext"
 import { useApiClient } from "../hooks/useApiClient"
 import { useNavigate } from "react-router-dom"
 
-export default function Sidebar({ chats }) {
+export default function Sidebar({ chats, fetchChats }) {
     // States and Variables
     const [searchInput, setSearchInput] = useState("")
     const [searchResult, setSearchResult] = useState([])
@@ -57,6 +57,7 @@ export default function Sidebar({ chats }) {
             navigate(`/chat/${data.id}`)
             setSearchInput("")
             setSearchResult([])
+            await fetchChats()
         }
 
     }
