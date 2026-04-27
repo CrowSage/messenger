@@ -45,7 +45,7 @@ export default function ChatWindow({ chatId, activeChat }) {
 
             socket.onmessage = (event) => {
                 const data = JSON.parse(event.data)
-                setMessages(prev => [...prev, data])
+                setMessages(prev => [...prev, data || []])
             }
 
             socket.onclose = () => {
@@ -53,8 +53,10 @@ export default function ChatWindow({ chatId, activeChat }) {
             }
 
         }
-        initSocket()
-        return () => socketRef.current?.close()
+        initSocket();
+        return () => {
+            socket?.close();
+        };
     }, [chatId])
 
 
@@ -71,17 +73,20 @@ export default function ChatWindow({ chatId, activeChat }) {
 
     if (!activeChat) return <p>Loading...</p>
     return (
-        <>
-            <h4>{activeChat.conversation_type === "direct" ? <span>{activeChat.participants.find((p) => p.user !== user.id)?.username}</span> : <span>{activeChat.name}</span>}</h4>
-            {messages.map((message, index) => (
-                <Message content={message.content} created_at={message.created_at} sender={message.sender} key={message.id || index} />
-            ))}
+        <div className="mainChatWindow">
+            <h4 className="chatHeader">{activeChat.conversation_type === "direct" ? <span>{activeChat.participants.find((p) => p.user !== user.id)?.username}</span> : <span>{activeChat.name}</span>}</h4>
 
-            <form onSubmit={(e) => { e.preventDefault(); sendMessage() }}>
+            <div className="messageContainer">
 
+                {messages.map((message, index) => (
+                    <Message content={message.content} created_at={message.created_at} sender={message.sender} key={message.id || index} />
+                ))}
+
+            </div>
+            <form onSubmit={(e) => { e.preventDefault(); sendMessage() }} className="messageForm">
                 <input type="text" value={messageInput} onChange={(e) => setMessageInput(e.target.value)} />
                 <button type="submit"><IoSend /></button>
             </form>
-        </>
+        </div>
     )
 }

@@ -2,6 +2,9 @@ import { useEffect, useState } from "react"
 import { useAuth } from "../context/AuthContext"
 import { useApiClient } from "../hooks/useApiClient"
 import { useNavigate } from "react-router-dom"
+import { BiSearch } from "react-icons/bi"
+import ChatItem from "./ChatItem"
+
 
 export default function Sidebar({ chats, fetchChats }) {
     // States and Variables
@@ -65,26 +68,32 @@ export default function Sidebar({ chats, fetchChats }) {
 
 
     return (
-        <>
-            <form className="searchInputContainer">
-                <input type="text" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} />
-                <button className="submitBtn">submit</button>
-            </form>
-            {chats && chats.map((chat) => (
-                <div key={chat.id} onClick={() => { navigate(`/chat/${chat.id}`) }}>
+        <div className="mainSidebar">
+            <h1 className="logo">Messenger</h1>
+            <div className="searchBox">
+                <BiSearch size={20} />
+                <input type="text" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} className="searchInput" placeholder="Search or start a new chat" />
+            </div>
 
-                    {/* Naming Logic */}
-                    {chat.conversation_type === "direct" ? <span>{chat.participants.find((p) => p.user !== user.id)?.username}</span> : <span>{chat.name}</span>}
+            <div className="chatListContainer">
+                {chats && chats.map((chat) => (
+                    <ChatItem key={chat.id} chat={chat} />
+                ))}
+
+                <div className="searchResultContainer">
+                    {searchResult.length > 0 && <span className="searchHeading">Search Result</span>}
+                    {searchResult.length > 0 && searchResult.map((result) => (
+                        <span key={result.id} onClick={() => { resultClickHandler(result.id) }} className="resultItem">
+                            {result.username}
+                        </span>
+
+                    ))
+                    }
                 </div>
-            ))}
-            {searchInput && <h1>Search Result</h1>}
-            {searchResult && searchResult.map((result) => (
-                <span key={result.id} onClick={() => { resultClickHandler(result.id) }}>
-                    {result.username}
-                </span>
+            </div>
 
-            ))
-            }
-        </>
+
+
+        </div>
     )
 }

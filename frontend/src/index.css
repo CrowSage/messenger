@@ -1,0 +1,146 @@
+/* ===================Globals========================= */
+@font-face {
+    font-family: "MyFont";
+    src: url("./assets/fonts/MyFont.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "UIFont";
+    src: url("./assets/fonts/InterVariable.woff2") format("woff2");
+}
+
+:root {
+    --bg: hsl(0, 0%, 5%);
+    --fg: hsl(0, 0%, 95%);
+    --accent: rgb(5, 204, 5);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "UIFont";
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--fg);
+}
+
+/* ===================Main Chat========================= */
+.mainChat {
+    display: flex;
+    height: 100vh;
+
+    gap: 10px;
+}
+
+/* ===================Sidebar========================= */
+
+.mainSidebar {
+    width: 450px;
+    border-right: 1px solid #373737;
+
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+    padding: 10px;
+}
+
+.logo {
+    font-family: "MyFont";
+    font-weight: 500;
+    letter-spacing: -5%;
+    margin: 20px 10px;
+    cursor: pointer;
+}
+
+/* ===================Search Input========================= */
+.searchBox {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    border: 1px solid gray;
+    border-radius: 10px;
+
+    color: gray;
+
+    padding: 8px 16px;
+
+    gap: 10px;
+}
+
+.searchBox:focus-within {
+    border-color: var(--fg);
+    color: var(--fg);
+}
+
+.searchInput {
+    background-color: transparent;
+    border: none;
+    font-size: 14px;
+    outline: none;
+    color: var(--fg);
+
+    flex: 1;
+}
+
+/* ===================ChatList and Search Result========================= */
+
+.searchResultContainer,
+.chatListContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.chatListContainer {
+    overflow-y: scroll;
+}
+
+.chatListContainer::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chatListContainer::-webkit-scrollbar-thumb {
+    background-color: hsl(0, 0%, 20%);
+    border-radius: 6px;
+}
+
+.searchHeading {
+    font-size: 14px;
+    font-weight: 500;
+    background-color: hsl(0, 0%, 10%);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 10px;
+    padding: 5px;
+
+    font-variant: small-caps;
+}
+
+.resultItem,
+.chatItem {
+    padding: 16px 32px;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.resultItem:hover,
+.chatItem:hover {
+    background-color: hsl(0, 0%, 10%);
+}
+
+/* ===================ChatWindow========================= */
+.mainChatWindow {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
