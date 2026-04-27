@@ -13,7 +13,14 @@ export default function ChatItem({ chat }) {
             <div className="pfp">
                 {pfp}
             </div>
-            <span>{chatName}</span>
+            <div className="nameAndLastMsg">
+                <span className="chatName">{chatName}</span>
+                <span className="lastMsg">Congradulation! You are Gay and Les</span>
+            </div>
+            <div className="dateAndCount">
+                <span className="lastUpdated">24/6/2026</span>
+                <span className="unReadCount">2</span>
+            </div>
         </div>
     )
 }

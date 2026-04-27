@@ -4,6 +4,7 @@ import { useApiClient } from "../hooks/useApiClient"
 import { useNavigate } from "react-router-dom"
 import { BiSearch } from "react-icons/bi"
 import ChatItem from "./ChatItem"
+import UserItem from "./UserItem"
 
 
 export default function Sidebar({ chats, fetchChats }) {
@@ -43,27 +44,6 @@ export default function Sidebar({ chats, fetchChats }) {
 
     // Functions
 
-    async function resultClickHandler(otherUserId) {
-
-        const data = await apiClient("api/chat/new/",
-            {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    "type": "direct",
-                    "other_user": otherUserId,
-                    "name": ""
-                })
-            })
-
-        if (data.id) {
-            navigate(`/chat/${data.id}`)
-            setSearchInput("")
-            setSearchResult([])
-            await fetchChats()
-        }
-
-    }
 
 
 
@@ -81,14 +61,10 @@ export default function Sidebar({ chats, fetchChats }) {
                 ))}
 
                 <div className="searchResultContainer">
-                    {searchResult.length > 0 && <span className="searchHeading">Search Result</span>}
+                    {searchResult.length > 0 && <hr className="resultDivider" />}
                     {searchResult.length > 0 && searchResult.map((result) => (
-                        <span key={result.id} onClick={() => { resultClickHandler(result.id) }} className="resultItem">
-                            {result.username}
-                        </span>
-
-                    ))
-                    }
+                        <UserItem key={result.id} result={result} />
+                    ))}
                 </div>
             </div>
 
