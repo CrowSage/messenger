@@ -24,7 +24,9 @@ def get_chats(request):
     users_chats = Conversation.objects.filter(participants__user=request.user)
 
     # Serializing
-    serializer = ConversationSerializer(users_chats, many=True)
+    serializer = ConversationSerializer(
+        users_chats, many=True, context={"request": request}
+    )
 
     # Sending Response
     return Response({"chats": serializer.data})

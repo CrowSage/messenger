@@ -9,10 +9,15 @@
     src: url("./assets/fonts/InterVariable.woff2") format("woff2");
 }
 
+@font-face {
+    font-family: "logoFont";
+    src: url("./assets/fonts/Chillax-Variable.woff2") format("woff2");
+}
+
 :root {
     --bg: hsl(0, 0%, 5%);
     --fg: hsl(0, 0%, 95%);
-    --accent: rgb(2, 115, 2);
+    --accent: rgb(132, 48, 0);
 }
 
 * {
@@ -32,7 +37,7 @@ body {
     display: flex;
     height: 100vh;
 
-    gap: 10px;
+    /* gap: 10px; */
 }
 
 /* ===================Sidebar========================= */
@@ -50,11 +55,12 @@ body {
 }
 
 .logo {
-    font-family: "MyFont";
+    font-family: "logoFont";
     font-weight: 500;
-    letter-spacing: -5%;
+    letter-spacing: -3%;
     margin: 20px 10px;
     cursor: pointer;
+    font-size: 40px;
 }
 
 /* ===================Search Input========================= */
@@ -103,10 +109,12 @@ body {
     overflow-y: scroll;
 }
 
+.messageContainer::-webkit-scrollbar,
 .chatListContainer::-webkit-scrollbar {
     width: 6px;
 }
 
+.messageContainer::-webkit-scrollbar-thumb,
 .chatListContainer::-webkit-scrollbar-thumb {
     background-color: hsl(0, 0%, 20%);
     border-radius: 6px;
@@ -187,18 +195,89 @@ body {
     width: 20px;
     height: 20px;
 
-    padding: 5px;
+    padding: 12px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     border-radius: 100%;
+
 }
 
 /* ===================ChatWindow========================= */
+
 .mainChatWindow {
     flex: 1;
 
     display: flex;
     flex-direction: column;
-    position: relative;
+}
+
+.chatHeader {
+    background-color: hsl(0, 0%, 7%);
+    width: 100%;
+
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+
+    padding: 20px;
+    gap: 10px;
+}
+
+.messageContainer {
+    flex: 1;
+    overflow-y: scroll;
+}
+
+/* ===================Message Form Container========================= */
+
+.messageFormContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+
+.messageForm {
+    width: 100%;
+
+    display: flex;
+
+    border: 1px solid #373737;
+    padding: 5px;
+
+    border-radius: 10px;
+
+}
+
+.messageInput {
+    flex: 1;
+    background-color: transparent;
+    border: none;
+
+    font-size: 20px;
+    padding: 10px;
+    outline: none;
+    color: var(--fg);
+}
+
+.messageSendBtn {
+    width: 50px;
+    background-color: var(--accent);
+    color: var(--fg);
+    border: none;
+    cursor: pointer;
+    border: 1px solid var(--accent);
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+
+    border-radius: 10px;
+}
+
+.messageSendBtn:hover {
+    background-color: transparent;
+    color: var(--accent);
 }

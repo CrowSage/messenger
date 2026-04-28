@@ -2,21 +2,30 @@ import { useEffect, useState, useRef } from "react"
 import { useApiClient } from "../hooks/useApiClient"
 import Message from "../components/Message"
 import { useAuth } from "../context/AuthContext"
-import { IoSend } from "react-icons/io5";
+import { RiSendPlaneFill } from "react-icons/ri";
 import { WEBSOCKET_API_URL } from "../config";
 
 
-export default function ChatWindow({ chatId, activeChat }) {
+export default function ChatWindow({ chatId, activeChat, fetchChats }) {
 
     // States and Variables
     const [messages, setMessages] = useState([])
     const [messageInput, setMessageInput] = useState("")
     const socketRef = useRef(null)
 
+
     // Others
     const apiClient = useApiClient()
     const { user, token, refreshAccessToken } = useAuth()
     console.log(activeChat)
+
+
+    const chatName =
+        activeChat?.conversation_type === "direct"
+            ? activeChat.participants.find((p) => p.user !== user.id)?.username
+            : activeChat?.name;
+
+    const pfp = chatName ? chatName[0].toUpperCase() : "?";
 
     // UseEffects
     useEffect(() => {
@@ -46,6 +55,7 @@ export default function ChatWindow({ chatId, activeChat }) {
             socket.onmessage = (event) => {
                 const data = JSON.parse(event.data)
                 setMessages(prev => [...prev, data || []])
+                fetchChats()
             }
 
             socket.onclose = () => {
@@ -55,7 +65,7 @@ export default function ChatWindow({ chatId, activeChat }) {
         }
         initSocket();
         return () => {
-            socket?.close();
+            socketRef.current?.close();
         };
     }, [chatId])
 
@@ -74,7 +84,10 @@ export default function ChatWindow({ chatId, activeChat }) {
     if (!activeChat) return <p>Loading...</p>
     return (
         <div className="mainChatWindow">
-            <h4 className="chatHeader">{activeChat.conversation_type === "direct" ? <span>{activeChat.participants.find((p) => p.user !== user.id)?.username}</span> : <span>{activeChat.name}</span>}</h4>
+            <h4 className="chatHeader">
+                <span className="pfp">{pfp}</span>
+                {chatName}
+            </h4>
 
             <div className="messageContainer">
 
@@ -83,10 +96,13 @@ export default function ChatWindow({ chatId, activeChat }) {
                 ))}
 
             </div>
-            <form onSubmit={(e) => { e.preventDefault(); sendMessage() }} className="messageForm">
-                <input type="text" value={messageInput} onChange={(e) => setMessageInput(e.target.value)} />
-                <button type="submit"><IoSend /></button>
-            </form>
+            <div className="messageFormContainer">
+
+                <form onSubmit={(e) => { e.preventDefault(); sendMessage() }} className="messageForm">
+                    <input type="text" value={messageInput} onChange={(e) => setMessageInput(e.target.value)} className="messageInput" placeholder="Message" />
+                    <button type="submit" className="messageSendBtn"><RiSendPlaneFill size={20} /></button>
+                </form>
+            </div>
         </div>
     )
 }

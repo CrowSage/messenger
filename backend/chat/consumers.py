@@ -1,6 +1,7 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 from .models import Conversation, Message
+from django.utils.timezone import now
 import json
 
 
@@ -64,5 +65,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
             content=message_text,
             conversation=chat,
         )
+
+        chat.updated_at = now()
+        chat.save(update_fields=["updated_at"])
 
         return message_obj

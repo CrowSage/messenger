@@ -43,13 +43,33 @@ export default function Sidebar({ chats, fetchChats }) {
 
 
     // Functions
+    async function resultClickHandler(otherUserId) {
 
+        const data = await apiClient("api/chat/new/",
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    "type": "direct",
+                    "other_user": otherUserId,
+                    "name": ""
+                })
+            })
+
+        if (data.id) {
+            navigate(`/chat/${data.id}`)
+            setSearchInput("")
+            setSearchResult([])
+            await fetchChats()
+        }
+
+    }
 
 
 
     return (
         <div className="mainSidebar">
-            <h1 className="logo">Messenger</h1>
+            <h1 className="logo">XLetter</h1>
             <div className="searchBox">
                 <BiSearch size={20} />
                 <input type="text" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} className="searchInput" placeholder="Search or start a new chat" />
@@ -63,7 +83,7 @@ export default function Sidebar({ chats, fetchChats }) {
                 <div className="searchResultContainer">
                     {searchResult.length > 0 && <hr className="resultDivider" />}
                     {searchResult.length > 0 && searchResult.map((result) => (
-                        <UserItem key={result.id} result={result} />
+                        <UserItem key={result.id} result={result} resultClickHandler={resultClickHandler} />
                     ))}
                 </div>
             </div>

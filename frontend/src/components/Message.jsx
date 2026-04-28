@@ -4,8 +4,9 @@ export default function Message({ content, created_at, sender }) {
 
     return (
         <span className="message" >
-            {sender}, {formattedDate}
-            <strong>{content}</strong>
+            <span>Sender: {sender}</span><br />
+            <span>Date: {formattedDate}</span><br />
+            <strong>Message{content}</strong><br />
         </span>
     )
 }

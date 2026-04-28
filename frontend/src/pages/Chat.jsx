@@ -34,7 +34,7 @@ export default function Chat() {
     return (
         <div className="mainChat">
             <Sidebar chats={allChats} fetchChats={fetchChats} />
-            {chatId && <ChatWindow chatId={chatId} activeChat={activeChat} />}
+            {chatId && <ChatWindow chatId={chatId} activeChat={activeChat} fetchChats={fetchChats} />}
         </div>
     )
 }
