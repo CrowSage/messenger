@@ -69,7 +69,7 @@ export default function Sidebar({ chats, fetchChats }) {
 
     return (
         <div className="mainSidebar">
-            <h1 className="logo">XLetter</h1>
+            <h1 className="logo">Messenger</h1>
             <div className="searchBox">
                 <BiSearch size={20} />
                 <input type="text" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} className="searchInput" placeholder="Search or start a new chat" />

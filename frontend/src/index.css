@@ -17,7 +17,10 @@
 :root {
     --bg: hsl(0, 0%, 5%);
     --fg: hsl(0, 0%, 95%);
-    --accent: rgb(132, 48, 0);
+    /* --accent: rgb(132, 48, 0); */
+
+    --accent: #3F6B37;
+    --sent-bubble: #274722;
 }
 
 * {
@@ -29,6 +32,11 @@
 
 body {
     background-color: var(--bg);
+    color: var(--fg);
+}
+
+::selection {
+    background-color: blue;
     color: var(--fg);
 }
 
@@ -55,10 +63,10 @@ body {
 }
 
 .logo {
-    font-family: "logoFont";
+    font-family: "MyFont";
     font-weight: 500;
-    letter-spacing: -3%;
-    margin: 20px 10px;
+    letter-spacing: -5%;
+    margin: 15px 20px;
     cursor: pointer;
     font-size: 40px;
 }
@@ -70,7 +78,7 @@ body {
     align-items: center;
 
     border: 1px solid gray;
-    border-radius: 10px;
+    border-radius: 16px;
 
     color: gray;
 
@@ -109,11 +117,13 @@ body {
     overflow-y: scroll;
 }
 
+.messageInput::-webkit-scrollbar,
 .messageContainer::-webkit-scrollbar,
 .chatListContainer::-webkit-scrollbar {
     width: 6px;
 }
 
+.messageInput::-webkit-scrollbar-thumb,
 .messageContainer::-webkit-scrollbar-thumb,
 .chatListContainer::-webkit-scrollbar-thumb {
     background-color: hsl(0, 0%, 20%);
@@ -132,7 +142,7 @@ body {
 .chatItem {
     padding: 16px 32px;
     cursor: pointer;
-    border-radius: 10px;
+    border-radius: 16px;
     margin: 0px 10px;
 }
 
@@ -188,6 +198,11 @@ body {
 
 .lastUpdated {
     color: gray;
+    font-weight: 500;
+}
+
+.newUpdated {
+    color: var(--accent);
 }
 
 .unReadCount {
@@ -227,7 +242,16 @@ body {
 .messageContainer {
     flex: 1;
     overflow-y: scroll;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: flex-end;
+    gap: 10px;
+
+    padding: 10px 20px;
 }
+
 
 /* ===================Message Form Container========================= */
 
@@ -235,6 +259,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
     padding: 10px;
 }
 
@@ -242,27 +267,35 @@ body {
     width: 100%;
 
     display: flex;
+    justify-content: center;
+    flex-direction: column;
+
 
     border: 1px solid #373737;
-    padding: 5px;
+    border-radius: 8px;
 
-    border-radius: 10px;
-
+    background-color: hsl(0, 0%, 7%);
+    padding: 20px 20px;
 }
 
 .messageInput {
-    flex: 1;
     background-color: transparent;
+    overflow: hidden;
+    overflow-y: auto;
     border: none;
 
-    font-size: 20px;
-    padding: 10px;
+    font-size: 16px;
     outline: none;
     color: var(--fg);
+
+    resize: none;
+    max-height: 150px;
+
+    padding: 15px 5px;
+    margin-bottom: 10px;
 }
 
 .messageSendBtn {
-    width: 50px;
     background-color: var(--accent);
     color: var(--fg);
     border: none;
@@ -273,11 +306,93 @@ body {
     align-items: center;
     justify-content: center;
 
+    align-self: center;
 
-    border-radius: 10px;
+    border-radius: 8px;
+
+
+    width: 40px;
+    height: 40px;
+}
+
+.filePicker {
+    color: rgba(255, 255, 255, 0.6);
+    background-color: hsl(0, 0%, 15%);
+
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+}
+
+.filePicker:hover {
+    background-color: hsl(0, 0%, 20%);
+}
+
+.messageActions {
+    display: flex;
+    align-items: center;
+
+    justify-content: flex-end;
+    width: 100%;
 }
 
 .messageSendBtn:hover {
     background-color: transparent;
     color: var(--accent);
+}
+
+/* ===================Message========================= */
+.messageBubble {
+    background-color: hsl(0, 0%, 15%);
+    padding: 15px;
+
+    display: inline-flex;
+
+    justify-content: center;
+    flex-direction: column;
+
+    max-width: 50%;
+
+    border-radius: 16px;
+    font-size: 16px;
+
+    gap: 10px;
+
+    word-break: break-word
+}
+
+.sended {
+    align-self: flex-end;
+    background-color: var(--sent-bubble);
+    border-bottom-right-radius: 0px;
+}
+
+.received {
+    align-self: flex-start;
+    border-bottom-left-radius: 0px;
+
+}
+
+.messageData {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    align-self: flex-end;
+
+    gap: 5px;
+}
+
+.icon {
+    /* margin-top: 2px; */
+    color: rgb(0, 174, 255);
 }

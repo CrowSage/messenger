@@ -33,7 +33,7 @@ export default function ChatItem({ chat }) {
                 <span className="lastMsg">{chat.last_message?.content || ""}</span>
             </div>
             <div className="dateAndCount">
-                <span className="lastUpdated">{formattedDate || "New"}</span>
+                <span className={`lastUpdated ${chat.unread_count > 0 ? "newUpdated" : ""}`}>{formattedDate || "New"}</span>
                 {chat.unread_count > 0 && <span className="unReadCount">{chat.unread_count}</span>}
             </div>
         </div>

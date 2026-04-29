@@ -2,8 +2,9 @@ import { useEffect, useState, useRef } from "react"
 import { useApiClient } from "../hooks/useApiClient"
 import Message from "../components/Message"
 import { useAuth } from "../context/AuthContext"
-import { RiSendPlaneFill } from "react-icons/ri";
+import { FaArrowUp } from "react-icons/fa6";
 import { WEBSOCKET_API_URL } from "../config";
+import { LuPaperclip } from "react-icons/lu";
 
 
 export default function ChatWindow({ chatId, activeChat, fetchChats }) {
@@ -12,6 +13,8 @@ export default function ChatWindow({ chatId, activeChat, fetchChats }) {
     const [messages, setMessages] = useState([])
     const [messageInput, setMessageInput] = useState("")
     const socketRef = useRef(null)
+    const textAreaRef = useRef(null)
+    const thisRef = useRef(null)
 
 
     // Others
@@ -69,6 +72,9 @@ export default function ChatWindow({ chatId, activeChat, fetchChats }) {
         };
     }, [chatId])
 
+    useEffect(() => {
+        thisRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages]);
 
     // Functions
 
@@ -76,6 +82,7 @@ export default function ChatWindow({ chatId, activeChat, fetchChats }) {
         if (socketRef.current && messageInput.trim()) {
             socketRef.current.send(JSON.stringify({ content: messageInput }))
             setMessageInput("")
+            textAreaRef.current.style.height = "auto"
         }
     }
 
@@ -95,12 +102,29 @@ export default function ChatWindow({ chatId, activeChat, fetchChats }) {
                     <Message content={message.content} created_at={message.created_at} sender={message.sender} key={message.id || index} />
                 ))}
 
+                <div ref={thisRef}></div>
             </div>
             <div className="messageFormContainer">
 
                 <form onSubmit={(e) => { e.preventDefault(); sendMessage() }} className="messageForm">
-                    <input type="text" value={messageInput} onChange={(e) => setMessageInput(e.target.value)} className="messageInput" placeholder="Message" />
-                    <button type="submit" className="messageSendBtn"><RiSendPlaneFill size={20} /></button>
+                    <textarea type="text" value={messageInput} onChange={(e) => setMessageInput(e.target.value)} className="messageInput" placeholder="Message" rows={1} onInput={(e) => {
+                        e.target.style.height = "auto"
+                        e.target.style.height = e.target.scrollHeight + "px"
+                    }}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter" && !e.shiftKey) {
+                                e.preventDefault()
+                                sendMessage()
+                            }
+
+                        }}
+
+
+                        ref={textAreaRef}
+                    />
+                    <div className="messageActions">
+                        <button type="submit" className="messageSendBtn"><FaArrowUp size={16} /></button>
+                    </div>
                 </form>
             </div>
         </div>
