@@ -1,6 +1,7 @@
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
+import { HiSquare2Stack } from "react-icons/hi2"
 
 
 export default function Login() {
@@ -44,12 +45,13 @@ export default function Login() {
 
     return (
         <div className="formContainer">
-            <h3>Login</h3>
+            <h1>Login</h1>
+            <span className="authError error">{error}</span>
             <form onSubmit={handleSubmit} className="loginForm authForm">
                 <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
                 <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                <span className="authError error">{error}</span>
-                <button type="submit">Login</button>
+                <button type="submit" className="authBtn">Login</button>
+                <span className="authLink">Don't have an account? <Link className="links" to={"/register"}>Register</Link></span>
             </form>
         </div>
     )

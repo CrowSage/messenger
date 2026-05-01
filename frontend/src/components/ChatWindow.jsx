@@ -29,6 +29,8 @@ export default function ChatWindow({ chatId, activeChat, fetchChats }) {
             : activeChat?.name;
 
     const pfp = chatName ? chatName[0].toUpperCase() : "?";
+    const is_online = activeChat?.conversation_type === "direct" ? activeChat.participants.find((p) => p.user !== user.id)?.is_online : false
+
 
     // UseEffects
     useEffect(() => {
@@ -38,10 +40,14 @@ export default function ChatWindow({ chatId, activeChat, fetchChats }) {
             if (data) {
                 setMessages(data)
                 console.log(data)
+                await markAllAsRead(chatId)
+                fetchChats()
             }
         }
 
         fetchChat(chatId)
+
+
 
     }, [chatId])
 
@@ -55,10 +61,23 @@ export default function ChatWindow({ chatId, activeChat, fetchChats }) {
             const socket = new WebSocket(`${WEBSOCKET_API_URL}/ws/chat/${chatId}/?token=${freshToken}`)
             socketRef.current = socket
 
+            socket.onopen = () => {
+                fetchChats()
+            }
             socket.onmessage = (event) => {
                 const data = JSON.parse(event.data)
-                setMessages(prev => [...prev, data || []])
-                fetchChats()
+                if (data.type === "read_receipt") {
+                    setMessages(prev => prev.map(msg => msg.sender === user.id ? { ...msg, read_by: [...(msg.read_by || []), data.user_id] }
+                        : msg
+                    ))
+                } else if (data.type === "user_status") {
+                    fetchChats()
+                } else {
+
+                    setMessages(prev => [...prev, data || []])
+                    markAllAsRead(chatId)
+                    fetchChats()
+                }
             }
 
             socket.onclose = () => {
@@ -86,6 +105,9 @@ export default function ChatWindow({ chatId, activeChat, fetchChats }) {
         }
     }
 
+    async function markAllAsRead(id) {
+        const data = await apiClient(`api/chat/${id}/read/`, { method: "POST" })
+    }
 
 
     if (!activeChat) return <p>Loading...</p>
@@ -93,13 +115,17 @@ export default function ChatWindow({ chatId, activeChat, fetchChats }) {
         <div className="mainChatWindow">
             <h4 className="chatHeader">
                 <span className="pfp">{pfp}</span>
-                {chatName}
+                <span className="nameAndStatus">
+                    <span>{chatName}</span>
+                    <span className={`userStatus ${is_online && "userOnline"}`}>{is_online ? "Online" : "Offline"}</span>
+
+                </span>
             </h4>
 
             <div className="messageContainer">
 
                 {messages.map((message, index) => (
-                    <Message content={message.content} created_at={message.created_at} sender={message.sender} key={message.id || index} />
+                    <Message content={message.content} created_at={message.created_at} sender={message.sender} read_by={message.read_by} key={message.id || index} />
                 ))}
 
                 <div ref={thisRef}></div>

@@ -63,12 +63,28 @@ body {
 }
 
 .logo {
-    font-family: "MyFont";
+    font-family: "logoFont";
     font-weight: 500;
     letter-spacing: -5%;
     margin: 15px 20px;
     cursor: pointer;
     font-size: 40px;
+}
+
+.nameAndStatus {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.userStatus {
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.userOnline {
+    color: rgb(61, 226, 61);
 }
 
 /* ===================Search Input========================= */
@@ -394,5 +410,219 @@ body {
 
 .icon {
     /* margin-top: 2px; */
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.readed {
     color: rgb(0, 174, 255);
+}
+
+/* ===================Login and Register========================= */
+
+.formContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-direction: column;
+
+    height: 100vh;
+}
+
+.formContainer h1 {
+    font-size: 32px;
+}
+
+.authForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top: 30px;
+}
+
+.authForm Input {
+    font-size: 16px;
+    padding: 10px;
+
+    background-color: transparent;
+    border: 1px solid gray;
+    border-radius: 8px;
+
+    outline: none;
+    color: var(--fg);
+}
+
+.authForm input:focus {
+    border-color: var(--fg);
+}
+
+.authLink {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.links {
+    color: var(--accent);
+}
+
+.authBtn {
+    background-color: var(--accent);
+    color: var(--fg);
+    border: 1px solid var(--accent);
+
+    padding: 8px 16px;
+
+    font-size: 16px;
+
+    border-radius: 8px;
+    cursor: pointer;
+
+    margin-bottom: 10px;
+}
+
+.authBtn:hover {
+    background-color: transparent;
+    color: var(--accent);
+}
+
+.authError {
+    color: coral;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.formContainer .logo {
+    position: absolute;
+    top: 10px;
+}
+
+/* ===================Home========================= */
+.mainHome {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    background-color: transparent;
+}
+
+/* Inherits the MyFont from your sidebar logo */
+.navbar .logo {
+    margin: 0;
+    font-size: 32px;
+}
+
+.action button {
+    border: 1px solid var(--accent);
+    background-color: transparent;
+    color: var(--accent);
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.action button:hover {
+    background-color: var(--accent);
+    color: var(--fg);
+    /* Changed to fg for better contrast on green */
+}
+
+/* Hero Section */
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    flex: 1;
+    text-align: center;
+    padding: 20px;
+}
+
+.hero h1 {
+    font-family: "logoFont";
+    /* Using your accent font */
+    font-size: 80px;
+    letter-spacing: -2px;
+    margin-bottom: 10px;
+}
+
+.hero span {
+    font-size: 20px;
+    color: gray;
+    font-weight: 300;
+}
+
+/* About / Info Section */
+.about {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 100px;
+    padding: 60px 20px;
+    background-color: hsl(0, 0%, 7%);
+    border-top: 1px solid #373737;
+}
+
+.buildWithContainer,
+.featureContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.buildWithContainer h3,
+.featureContainer h3 {
+    color: var(--accent);
+    font-family: "logoFont";
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.featureContainer span {
+    font-size: 18px;
+    color: var(--fg);
+    opacity: 0.8;
+}
+
+/* Specific Pill Style for Tech Stack */
+.buildWith {
+    background-color: hsl(0, 0%, 12%);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    border: 1px solid #373737;
+    width: fit-content;
+}
+
+/* Responsive adjustment */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 48px;
+    }
+
+    .about {
+        flex-direction: column;
+        gap: 40px;
+        align-items: center;
+        text-align: center;
+    }
+
+    .buildWith {
+        margin: 0 auto;
+    }
 }

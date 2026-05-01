@@ -1,7 +1,6 @@
 import { useState } from "react"
 import { API_URL } from "../config.js"
-import { useNavigate } from "react-router-dom"
-
+import { useNavigate, Link } from "react-router-dom"
 
 
 export default function Register() {
@@ -70,16 +69,17 @@ export default function Register() {
 
     return (
         <div className="formContainer">
-            <h3>Register</h3>
+            <h1>Register</h1>
+            <span className="authError error">{error}</span>
 
             <form onSubmit={handleSubmit} className="registerForm authForm">
                 <input type="text" name="username" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
                 <input type="email" name="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
                 <input type="password" name="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
                 <input type="password" name="confirm-password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
-                <span className="authError error">{error}</span>
-                <button type="submit">Register</button>
+                <button type="submit" className="authBtn">Register</button>
+                <span className="authLink">Already have an account? <Link className="links" to={"/login"}>Login</Link></span>
             </form>
-        </div>
+        </div >
     )
 }
