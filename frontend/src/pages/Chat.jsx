@@ -3,12 +3,14 @@ import Sidebar from "../components/Sidebar"
 import ChatWindow from "../components/ChatWindow"
 import { useState, useEffect } from "react"
 import { useApiClient } from "../hooks/useApiClient"
+import NewGroupModal from "../components/NewGroupModal"
 
 export default function Chat() {
 
 
     // States and Variables
     const [allChats, setAllChats] = useState([])
+    const [showNewGroupModal, setShowNewGroupModal] = useState(true)
 
     // Others
     const { chatId } = useParams()
@@ -33,8 +35,9 @@ export default function Chat() {
     // Returning
     return (
         <div className="mainChat">
-            <Sidebar chats={allChats} fetchChats={fetchChats} />
+            <Sidebar chats={allChats} fetchChats={fetchChats} setShowNewGroupModal={setShowNewGroupModal} />
             {chatId && <ChatWindow chatId={chatId} activeChat={activeChat} fetchChats={fetchChats} />}
+            {showNewGroupModal && <NewGroupModal setShowNewGroupModal={setShowNewGroupModal} />}
         </div>
     )
 }

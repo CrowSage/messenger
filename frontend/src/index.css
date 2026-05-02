@@ -87,7 +87,8 @@ body {
     color: rgb(61, 226, 61);
 }
 
-/* ===================Search Input========================= */
+/* ===================Search Input and Group Name Input========================= */
+.groupNameBox,
 .searchBox {
     position: relative;
     display: flex;
@@ -104,11 +105,13 @@ body {
     margin: 0px 10px;
 }
 
+.groupNameBox:focus-within,
 .searchBox:focus-within {
     border-color: var(--fg);
     color: var(--fg);
 }
 
+.groupNameInput,
 .searchInput {
     background-color: transparent;
     border: none;
@@ -133,12 +136,14 @@ body {
     overflow-y: scroll;
 }
 
+.groupModalMain::-webkit-scrollbar,
 .messageInput::-webkit-scrollbar,
 .messageContainer::-webkit-scrollbar,
 .chatListContainer::-webkit-scrollbar {
     width: 6px;
 }
 
+.groupModalMain::-webkit-scrollbar-thumb,
 .messageInput::-webkit-scrollbar-thumb,
 .messageContainer::-webkit-scrollbar-thumb,
 .chatListContainer::-webkit-scrollbar-thumb {
@@ -268,6 +273,48 @@ body {
     padding: 10px 20px;
 }
 
+.loadingtext {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 1;
+}
+
+.loadingtext p {
+    color: rgba(255, 255, 255, 0.6);
+    position: relative;
+}
+
+.loadingtext p::after {
+    position: absolute;
+    animation: b 3s infinite linear;
+    color: rgba(255, 255, 255, 0.6);
+    content: "";
+    left: 105%;
+}
+
+@keyframes b {
+    0% {
+        content: "";
+    }
+
+    10% {
+        content: ".";
+    }
+
+    40% {
+        content: "..";
+    }
+
+    70% {
+        content: "...";
+    }
+
+    100% {
+        content: "";
+    }
+}
 
 /* ===================Message Form Container========================= */
 
@@ -625,4 +672,153 @@ body {
     .buildWith {
         margin: 0 auto;
     }
+}
+
+/* ===================New Group Modal========================= */
+.groupModalMainContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+
+    gap: 10px;
+}
+
+.groupModalMain {
+    position: relative;
+    width: 500px;
+    max-width: 90%;
+    max-height: 90%;
+
+
+    border: 1px solid gray;
+    background-color: hsl(0, 0%, 8%);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    padding: 50px;
+    border-radius: 24px;
+
+    overflow-y: auto;
+}
+
+.userSelector {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.selectedUserContainer {
+    text-align: left;
+    padding: 16px 0px;
+    color: var(--fg);
+}
+
+.searchResultContainer h4,
+.selectedUserContainer h4 {
+    margin: 10px 0px;
+}
+
+.createGroupBtn {
+    align-self: center;
+    font-size: 14px;
+
+    padding: 16px 32px;
+
+    background-color: var(--accent);
+    color: var(--fg);
+    border: 1px solid var(--accent);
+
+    border-radius: 8px;
+    cursor: pointer;
+
+    margin-top: 10px;
+}
+
+.createGroupBtn:hover {
+    background-color: transparent;
+    color: var(--accent);
+
+}
+
+@media (max-width: 600px) {
+    .groupModalMain {
+        width: 85%;
+        border-radius: 16px;
+    }
+}
+
+.groupModalMain::-webkit-scrollbar-track {
+    margin: 20px;
+}
+
+.closeModalBtn {
+    background-color: transparent;
+    color: var(--fg);
+    border: none;
+
+    font-size: 16px;
+    font-family: "UIFont";
+    font-weight: 600;
+
+    position: absolute;
+
+    top: 30px;
+    right: 30px;
+
+    cursor: pointer;
+
+
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 4px;
+    width: 30px;
+    height: 30px;
+}
+
+.closeModalBtn:hover {
+    background-color: hsl(0, 0%, 15%);
+}
+
+/* ===================Small Nav========================= */
+.smallNav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.searchBox {
+    flex: 1;
+}
+
+.groupModalBtn {
+
+
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-right: 10px;
+
+    cursor: pointer;
+}
+
+.groupModalBtn:hover {
+    background-color: hsl(0, 0%, 12%);
 }

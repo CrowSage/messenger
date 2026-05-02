@@ -110,7 +110,10 @@ export default function ChatWindow({ chatId, activeChat, fetchChats }) {
     }
 
 
-    if (!activeChat) return <p>Loading...</p>
+    if (!activeChat) return <div class="loadingtext">
+        <p>Loading</p>
+    </div>
+
     return (
         <div className="mainChatWindow">
             <h4 className="chatHeader">

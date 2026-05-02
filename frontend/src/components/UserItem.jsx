@@ -12,7 +12,7 @@ export default function UserItem({ result, resultClickHandler }) {
 
 
     return (
-        <div className="userItem" onClick={() => { resultClickHandler(result.id) }}>
+        <div className="userItem" onClick={() => { resultClickHandler(result) }}>
             <div className="pfp">
                 {pfp}
             </div>
