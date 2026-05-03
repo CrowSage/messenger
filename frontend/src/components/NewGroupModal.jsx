@@ -3,6 +3,7 @@ import { useApiClient } from "../hooks/useApiClient"
 import { BiSearch, BiRename } from "react-icons/bi"
 import { RxCross1 } from "react-icons/rx";
 import UserItem from "./UserItem"
+import { useNavigate } from "react-router-dom";
 
 
 export default function NewGroupModal({ setShowNewGroupModal }) {
@@ -10,9 +11,11 @@ export default function NewGroupModal({ setShowNewGroupModal }) {
     const [userSelectSearch, setUserSelectSearch] = useState("")
     const [userSelectSearchResults, setUserSelectSearchResults] = useState([])
     const [users, setUsers] = useState([])
+    const [error, setError] = useState("")
 
     const apiClient = useApiClient()
 
+    const navigate = useNavigate()
     // - Searching
     useEffect(() => {
         async function searchUsers(query) {
@@ -33,6 +36,38 @@ export default function NewGroupModal({ setShowNewGroupModal }) {
             ? prev.filter(u => u.id !== clickedUser.id)
             : [...prev, clickedUser])
     }
+
+
+    async function createGroupHandler(name, users) {
+
+        if (!name) {
+            setError("Name is required!")
+            return
+        } else if (users.length < 2) {
+            setError("Not Enough Users Selected")
+            return
+        }
+
+        const data = await apiClient("api/chat/new/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                "type": "group",
+                "users": users.map(u => u.id),
+                "name": name
+            })
+
+        })
+
+        if (data) {
+            navigate(`/chat/${data.id}`)
+            setShowNewGroupModal(false)
+
+        }
+
+
+    }
+
 
     return (
         <div className="groupModalMainContainer">
@@ -65,7 +100,7 @@ export default function NewGroupModal({ setShowNewGroupModal }) {
                         ))}
                     </div>
                 </div>
-                <button className="createGroupBtn">Create</button>
+                <button className="createGroupBtn" onClick={(e) => { createGroupHandler(groupName, users) }}>Create</button>
             </div>
         </div>
     )

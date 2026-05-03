@@ -10,7 +10,7 @@ export default function Chat() {
 
     // States and Variables
     const [allChats, setAllChats] = useState([])
-    const [showNewGroupModal, setShowNewGroupModal] = useState(true)
+    const [showNewGroupModal, setShowNewGroupModal] = useState(false)
 
     // Others
     const { chatId } = useParams()

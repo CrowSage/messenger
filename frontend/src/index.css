@@ -260,6 +260,12 @@ body {
     gap: 10px;
 }
 
+.participantList {
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.6);
+}
+
 .messageContainer {
     flex: 1;
     overflow-y: scroll;

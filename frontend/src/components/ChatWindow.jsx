@@ -120,7 +120,19 @@ export default function ChatWindow({ chatId, activeChat, fetchChats }) {
                 <span className="pfp">{pfp}</span>
                 <span className="nameAndStatus">
                     <span>{chatName}</span>
-                    <span className={`userStatus ${is_online && "userOnline"}`}>{is_online ? "Online" : "Offline"}</span>
+
+                    {activeChat.conversation_type === "direct" ?
+
+                        <span className={`userStatus ${is_online && "userOnline"}`}>{is_online ? "Online" : "Offline"}</span>
+                        : <span className="participantList">
+                            {activeChat.participants.map((p, i) => (
+                                <span className="participant" key={i}>
+                                    {p.username}
+                                    {i < activeChat.participants.length - 1 && ", "}
+                                </span>
+                            ))}
+                        </span>
+                    }
 
                 </span>
             </h4>
