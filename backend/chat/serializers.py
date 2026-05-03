@@ -1,12 +1,12 @@
 from rest_framework import serializers
 from .models import Conversation, ConversationParticipant, Message, Attachment
 
-
 # CONVERSATION-PARTICIPANT SERIALIZER ============>
 
 
 class ConversationParticipantSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source="user.username")
+    is_online = serializers.BooleanField(source="user.is_online")
 
     class Meta:
         model = ConversationParticipant
@@ -16,6 +16,7 @@ class ConversationParticipantSerializer(serializers.ModelSerializer):
             "username",
             "conversation",
             "is_admin",
+            "is_online",
             "joined_at",
             "left_at",
         ]

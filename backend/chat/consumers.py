@@ -19,6 +19,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         await self.channel_layer.group_add(self.group_name, self.channel_name)
 
+        await self.channel_layer.group_send(
+            self.group_name,
+            {
+                "type": "user_status",
+                "user_id": self.user.id,
+                "is_online": True,
+            },
+        )
+
+        await self.set_online()
         await self.accept()
 
     async def receive(self, text_data):
@@ -52,6 +62,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
     async def disconnect(self, close_code):
+        await self.set_offline()
+
+        await self.channel_layer.group_send(
+            self.group_name,
+            {
+                "type": "user_status",
+                "user_id": self.user.id,
+                "is_online": False,
+            },
+        )
+
         await self.channel_layer.group_discard(
             self.group_name,
             self.channel_name,
@@ -70,3 +91,29 @@ class ChatConsumer(AsyncWebsocketConsumer):
         chat.save(update_fields=["updated_at"])
 
         return message_obj
+
+    async def read_receipt(self, event):
+        await self.send(
+            text_data=json.dumps({"type": "read_receipt", "user_id": event["user_id"]})
+        )
+
+    @database_sync_to_async
+    def set_online(self):
+        self.user.is_online = True
+        self.user.save(update_fields=["is_online"])
+
+    @database_sync_to_async
+    def set_offline(self):
+        self.user.is_online = False
+        self.user.save(update_fields=["is_online"])
+
+    async def user_status(self, event):
+        await self.send(
+            text_data=json.dumps(
+                {
+                    "type": "user_status",
+                    "user_id": event["user_id"],
+                    "is_online": event["is_online"],
+                }
+            )
+        )

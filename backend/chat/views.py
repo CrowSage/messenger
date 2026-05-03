@@ -4,6 +4,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import Conversation, ConversationParticipant, Message, Attachment
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 from .serializers import (
     ConversationSerializer,
     ConversationParticipantSerializer,
@@ -21,7 +23,9 @@ User = get_user_model()
 def get_chats(request):
 
     # Getting chats from DB
-    users_chats = Conversation.objects.filter(participants__user=request.user)
+    users_chats = Conversation.objects.filter(participants__user=request.user).order_by(
+        "-updated_at"
+    )
 
     # Serializing
     serializer = ConversationSerializer(
@@ -68,7 +72,7 @@ def create_conversation(request):
         name = request.data.get("name", "")
 
         if not other_user:
-            return Response({"error": "other_user not provided"})
+            return Response({"error": "other_user not provided"}, status=401)
 
         other_user = User.objects.get(id=other_user)
 
@@ -91,18 +95,19 @@ def create_conversation(request):
 
         if not isinstance(members, list):
             return Response(
-                {"error": "users must be a list like: [user1_id, user2_id, user3_id]"}
+                {"error": "users must be a list like: [user1_id, user2_id, user3_id]"},
+                status=401,
             )
 
         members = set(members)
         members.add(request.user.id)
 
         if len(members) < 2:
-            return Response({"error": "who are you planning to chat with?"})
+            return Response({"error": "who are you planning to chat with?"}, status=401)
 
         chat = Conversation.objects.create(name=name, conversation_type="group")
         for member in members:
-            member = User.objects.filter(id=member)
+            member = User.objects.get(id=member)
 
             curr = ConversationParticipant.objects.create(
                 user=member, conversation=chat
@@ -114,5 +119,34 @@ def create_conversation(request):
         return Response({"id": chat.id, "message": "Chat created sucessfully"})
 
     return Response(
-        {"error": "provide with type:'direct' or 'group' when creating chat"}
+        {"error": "provide with type:'direct' or 'group' when creating chat"},
+        status=401,
     )
+
+
+# For Marking all messages as read for requesting user
+# Routed: /chat/<chat:id>/read/
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def mark_all_as_read(request, chat_id):
+
+    user = request.user
+
+    is_participant = ConversationParticipant.objects.filter(
+        conversation_id=chat_id,
+        user=user,
+    ).exists()
+
+    if not is_participant:
+        return Response({"message": "Not authorized"}, 403)
+
+    all_messages = Message.objects.filter(conversation_id=chat_id).exclude(read_by=user)
+    for message in all_messages:
+        message.read_by.add(user)
+
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f"chat_{chat_id}", {"type": "read_receipt", "user_id": user.id}
+    )
+
+    return Response({"message": "Marked all as read"}, status=200)
