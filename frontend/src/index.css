@@ -744,6 +744,12 @@ body {
     .featureContainer h3 {
         font-size: 10px;
     }
+
+
+}
+
+.hero {
+    min-height: 85vh;
 }
 
 /* ===================New Group Modal========================= */
