@@ -5,11 +5,11 @@ import { useNavigate } from "react-router-dom"
 import { BiSearch } from "react-icons/bi"
 import ChatItem from "./ChatItem"
 import UserItem from "./UserItem"
-import { MdOutlineGroupAdd } from "react-icons/md";
+import { MdGroupAdd } from "react-icons/md";
 
 
 
-export default function Sidebar({ chats, fetchChats, setShowNewGroupModal }) {
+export default function Sidebar({ chats, fetchChats, setShowNewGroupModal, chatId }) {
     // States and Variables
     const [searchInput, setSearchInput] = useState("")
     const [searchResult, setSearchResult] = useState([])
@@ -70,7 +70,7 @@ export default function Sidebar({ chats, fetchChats, setShowNewGroupModal }) {
 
 
     return (
-        <div className="mainSidebar">
+        <div className="" className={`mainSidebar ${chatId ? "chatOpened" : ""}`}>
             <h1 className="logo">Messenger</h1>
             <div className="smallNav">
 
@@ -78,7 +78,7 @@ export default function Sidebar({ chats, fetchChats, setShowNewGroupModal }) {
                     <BiSearch size={20} />
                     <input type="text" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} className="searchInput" placeholder="Search or start a new chat" />
                 </div>
-                <span className="groupModalBtn" onClick={() => setShowNewGroupModal(true)}><MdOutlineGroupAdd size={20} /></span>
+                <span className="groupModalBtn" onClick={() => setShowNewGroupModal(true)} title="Create a new group."><MdGroupAdd size={20} /></span>
             </div>
             <div className="chatListContainer">
                 {chats && chats.map((chat) => (

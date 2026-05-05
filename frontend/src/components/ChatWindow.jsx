@@ -5,6 +5,9 @@ import { useAuth } from "../context/AuthContext"
 import { FaArrowUp } from "react-icons/fa6";
 import { WEBSOCKET_API_URL } from "../config";
 import { LuPaperclip } from "react-icons/lu";
+import { IoMdClose } from "react-icons/io";
+
+import { useNavigate } from "react-router-dom";
 
 
 export default function ChatWindow({ chatId, activeChat, fetchChats }) {
@@ -21,7 +24,7 @@ export default function ChatWindow({ chatId, activeChat, fetchChats }) {
     const apiClient = useApiClient()
     const { user, token, refreshAccessToken } = useAuth()
     console.log(activeChat)
-
+    const navigate = useNavigate()
 
     const chatName =
         activeChat?.conversation_type === "direct"
@@ -134,6 +137,9 @@ export default function ChatWindow({ chatId, activeChat, fetchChats }) {
                         </span>
                     }
 
+                </span>
+                <span className="chatCloseBtn" onClick={() => { navigate(-1) }}>
+                    <IoMdClose />
                 </span>
             </h4>
 

@@ -35,7 +35,7 @@ export default function Chat() {
     // Returning
     return (
         <div className="mainChat">
-            <Sidebar chats={allChats} fetchChats={fetchChats} setShowNewGroupModal={setShowNewGroupModal} />
+            <Sidebar chats={allChats} fetchChats={fetchChats} setShowNewGroupModal={setShowNewGroupModal} chatId={chatId} />
             {chatId && <ChatWindow chatId={chatId} activeChat={activeChat} fetchChats={fetchChats} />}
             {showNewGroupModal && <NewGroupModal setShowNewGroupModal={setShowNewGroupModal} />}
         </div>
