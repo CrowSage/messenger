@@ -23,7 +23,6 @@ export default function ChatWindow({ chatId, activeChat, fetchChats }) {
     // Others
     const apiClient = useApiClient()
     const { user, token, refreshAccessToken } = useAuth()
-    console.log(activeChat)
     const navigate = useNavigate()
 
     const chatName =
@@ -76,21 +75,25 @@ export default function ChatWindow({ chatId, activeChat, fetchChats }) {
                 } else if (data.type === "user_status") {
                     fetchChats()
                 } else {
-
                     setMessages(prev => [...prev, data || []])
                     markAllAsRead(chatId)
                     fetchChats()
                 }
             }
 
-            socket.onclose = () => {
+            socket.onclose = (event) => {
+                console.log("WebSocket closed:", event.code, event.reason)
+            }
 
+            socket.onerror = (error) => {
+                console.error("WebSocket error:", error)
             }
 
         }
         initSocket();
         return () => {
             socketRef.current?.close();
+            socketRef.current = null;
         };
     }, [chatId])
 

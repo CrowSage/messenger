@@ -17,6 +17,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.chat_id = self.scope["url_route"]["kwargs"]["chat_id"]
         self.group_name = f"chat_{self.chat_id}"
 
+        # Check if user is participant
+        is_participant = await self.check_participant()
+        if not is_participant:
+            await self.close()
+            return
+
+        await self.accept()
+
         await self.channel_layer.group_add(self.group_name, self.channel_name)
 
         await self.channel_layer.group_send(
@@ -29,7 +37,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
         await self.set_online()
-        await self.accept()
 
     async def receive(self, text_data):
         data = json.loads(text_data)
@@ -44,9 +51,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 self.group_name,
                 {
                     "type": "chat_message",
+                    "id": message_obj.id,
                     "content": message_text,
                     "sender": self.user.id,
                     "created_at": str(message_obj.created_at),
+                    "read_by": [],
                 },
             )
 
@@ -54,9 +63,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.send(
             text_data=json.dumps(
                 {
+                    "id": event.get("id"),
                     "content": event["content"],
                     "sender": event["sender"],
                     "created_at": event["created_at"],
+                    "read_by": event.get("read_by", []),
                 }
             )
         )
@@ -91,6 +102,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
         chat.save(update_fields=["updated_at"])
 
         return message_obj
+
+    @database_sync_to_async
+    def check_participant(self):
+        try:
+            chat = Conversation.objects.get(id=self.chat_id)
+            return chat.participants.filter(id=self.user.id).exists()
+        except Conversation.DoesNotExist:
+            return False
 
     async def read_receipt(self, event):
         await self.send(
