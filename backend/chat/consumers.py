@@ -19,6 +19,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         # Check if user is participant
         is_participant = await self.check_participant()
+
         if not is_participant:
             await self.close()
             return
@@ -41,9 +42,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         data = json.loads(text_data)
         message_text = data.get("content")
+        message_type = data.get("type")
+
+        if message_type == "typing":
+            await self.channel_layer.group_send(
+                self.group_name, {"type": "typing_indicator", "user_id": self.user.id}
+            )
 
         # Saving Message in DB
-        if message_text:
+        elif message_text:
             message_obj = await self.save_message(message_text)
 
             # Broadcasting Message to everyone in group
@@ -107,7 +114,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     def check_participant(self):
         try:
             chat = Conversation.objects.get(id=self.chat_id)
-            return chat.participants.filter(id=self.user.id).exists()
+            return chat.participants.filter(user=self.user).exists()
         except Conversation.DoesNotExist:
             return False
 
@@ -133,6 +140,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     "type": "user_status",
                     "user_id": event["user_id"],
                     "is_online": event["is_online"],
+                }
+            )
+        )
+
+    async def typing_indicator(self, event):
+        await self.send(
+            text_data=json.dumps(
+                {
+                    "type": "typing",
+                    "user_id": event["user_id"],
                 }
             )
         )

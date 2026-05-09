@@ -18,6 +18,7 @@ export default function ChatWindow({ chatId, activeChat, fetchChats }) {
     const socketRef = useRef(null)
     const textAreaRef = useRef(null)
     const thisRef = useRef(null)
+    const [typing, setTyping] = useState(false)
 
 
     // Others
@@ -74,6 +75,14 @@ export default function ChatWindow({ chatId, activeChat, fetchChats }) {
                     ))
                 } else if (data.type === "user_status") {
                     fetchChats()
+                } else if (data.type === "typing") {
+
+                    if (data.user_id !== user.id) {
+                        setTyping(true)
+
+                        setTimeout(() => setTyping(false), 2000)
+                    }
+
                 } else {
                     setMessages(prev => [...prev, data || []])
                     markAllAsRead(chatId)
@@ -129,7 +138,8 @@ export default function ChatWindow({ chatId, activeChat, fetchChats }) {
 
                     {activeChat.conversation_type === "direct" ?
 
-                        <span className={`userStatus ${is_online && "userOnline"}`}>{is_online ? "Online" : "Offline"}</span>
+                        <span className={`userStatus ${is_online && "userOnline"}`}>{typing ? "typing..." : is_online ? "Online" : "Offline"}</span>
+
                         : <span className="participantList">
                             {activeChat.participants.map((p, i) => (
                                 <span className="participant" key={i}>
@@ -157,10 +167,18 @@ export default function ChatWindow({ chatId, activeChat, fetchChats }) {
             <div className="messageFormContainer">
 
                 <form onSubmit={(e) => { e.preventDefault(); sendMessage() }} className="messageForm">
-                    <textarea type="text" value={messageInput} onChange={(e) => setMessageInput(e.target.value)} className="messageInput" placeholder="Message" rows={1} onInput={(e) => {
-                        e.target.style.height = "auto"
-                        e.target.style.height = e.target.scrollHeight + "px"
-                    }}
+                    <textarea type="text" value={messageInput}
+
+                        className="messageInput" placeholder="Message" rows={1}
+
+                        onChange={(e) => setMessageInput(e.target.value)}
+
+                        onInput={(e) => {
+                            e.target.style.height = "auto"
+                            e.target.style.height = e.target.scrollHeight + "px"
+
+                            socketRef.current?.send(JSON.stringify({ type: "typing" }))
+                        }}
                         onKeyDown={(e) => {
                             if (e.key === "Enter" && !e.shiftKey) {
                                 e.preventDefault()
@@ -168,8 +186,6 @@ export default function ChatWindow({ chatId, activeChat, fetchChats }) {
                             }
 
                         }}
-
-
                         ref={textAreaRef}
                     />
                     <div className="messageActions">

@@ -1,8 +1,4 @@
 /* ===================Globals========================= */
-@font-face {
-    font-family: "MyFont";
-    src: url("./assets/fonts/MyFont.ttf") format("truetype");
-}
 
 @font-face {
     font-family: "UIFont";
@@ -11,7 +7,7 @@
 
 @font-face {
     font-family: "logoFont";
-    src: url("./assets/fonts/Chillax-Variable.woff2") format("woff2");
+    src: url("./assets/fonts/InterVariable.woff2") format("woff2");
 }
 
 :root {
@@ -64,7 +60,7 @@ body {
 
 .logo {
     font-family: "logoFont";
-    font-weight: 500;
+    font-weight: 600;
     letter-spacing: -5%;
     margin: 15px 20px;
     cursor: pointer;
@@ -515,6 +511,7 @@ body {
 .readed {
     color: rgb(0, 174, 255);
 }
+
 
 /* ===================Login and Register========================= */
 

@@ -19,7 +19,7 @@ class JWTAuthMiddleware(BaseMiddleware):
 
             user = await database_sync_to_async(User.objects.get)(id=user_id)
             scope["user"] = user
-        except (User.DoesNotExist, ExpiredTokenError, InvalidToken, Exception):
+        except (User.DoesNotExist, ExpiredTokenError, InvalidToken, Exception) as e:
             scope["user"] = AnonymousUser()
 
         return await super().__call__(scope, receive, send)
